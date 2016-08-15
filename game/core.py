@@ -22,12 +22,13 @@ class gameCore():
         self.healthPointsMax = 40
         self.healthPointsNow = 40
         self.message = ''
+        self.flag = 1
         self.deletedSymb = config.OTHER_ICONS["FREE_SPACE"]
         self.voidArray = [config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)]
         self.level = 0
         self.newLevels = CreateFirstLevel()
-        self.X = (config.fullLevelMap_X - config.X_CONST)//2
-        self.Y = (config.fullLevelMap_Y - config.Y_CONST)//2
+        self.X = (config.fullLevelMap_X + config.X_CONST*6)//2
+        self.Y = (config.fullLevelMap_Y + config.Y_CONST*6)//2
         self.currentCave()
 
 
@@ -42,7 +43,13 @@ class gameCore():
 #####################################################################################
     def movePointIncremental(self):
 
-        if self.deletedSymb == 'H':
+        if self.deletedSymb == config.OTHER_ICONS["LEVEL_UP"] and self.flag == 1:
+            self.level += 1
+            #self.currentCave()
+        if self.deletedSymb == config.OTHER_ICONS["LEVEL_DOWN"] and self.flag == 1:
+            self.level -= 1
+            #self.currentCave()
+        if self.deletedSymb == config.OTHER_ICONS["ADDITIONAL_TIME"]:
             self.movePointsLeft += 5
             if self.lightPoints-3 > 0:
                 self.lightPoints -= 3
@@ -81,9 +88,18 @@ class gameCore():
     def move(self, HorizontalMove, VerticalMove):
 
         self.message = ''
-        if self.caveMap[(config.Y_CONST//2)+VerticalMove][config.X_CONST//2+HorizontalMove] not in config.WALLS.values():
+        if (self.caveMap[(config.Y_CONST//2)+VerticalMove][config.X_CONST//2+HorizontalMove] not in config.WALLS.values())\
+                and (HorizontalMove != 0 or VerticalMove != 0):
+            if self.deletedSymb != config.OTHER_ICONS["LEVEL_DOWN"] or self.deletedSymb != config.OTHER_ICONS["LEVEL_UP"]:
+                #self.caveMap[config.Y_CONST//2][config.X_CONST//2] = config.OTHER_ICONS["FREE_SPACE"]
+                self.newLevels.levelMap[self.level][self.Y+config.Y_CONST//2][self.X+config.X_CONST//2] = config.OTHER_ICONS["FREE_SPACE"]
+            if self.deletedSymb == config.OTHER_ICONS["LEVEL_DOWN"]:
+                self.newLevels.levelMap[self.level][self.Y+config.Y_CONST//2][self.X+config.X_CONST//2] = config.OTHER_ICONS["LEVEL_UP"]
+                self.flag = 1
+            if self.deletedSymb == config.OTHER_ICONS["LEVEL_UP"]:
+                self.newLevels.levelMap[self.level][self.Y+config.Y_CONST//2][self.X+config.X_CONST//2] = config.OTHER_ICONS["LEVEL_DOWN"]
+                self.flag = 1
             self.deletedSymb = self.caveMap[(config.Y_CONST//2)+VerticalMove][config.X_CONST//2+HorizontalMove]
-            self.caveMap[config.Y_CONST//2][config.X_CONST//2] = config.OTHER_ICONS["FREE_SPACE"]
             if VerticalMove != 0:
                 if VerticalMove == -1:
                     for y in range(config.Y_CONST-1):
@@ -114,6 +130,11 @@ class gameCore():
             self.movePointIncremental()
             self.showCave()
 
+        if (HorizontalMove == 0 and VerticalMove == 0):
+            if self.deletedSymb == config.OTHER_ICONS["LEVEL_DOWN"] or self.deletedSymb == config.OTHER_ICONS["LEVEL_UP"]:
+                self.flag = 0
+            self.movePointIncremental()
+            self.showCave()
 
 
 #####################################################################################
@@ -152,7 +173,7 @@ class gameCore():
     def showCave(self):
 
         os.system('cls')
-        #self.currentCave()
+        self.currentCave()
         self.startPosition()
         #self.doMessUp()
         self.recompileLevel()

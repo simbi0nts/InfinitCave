@@ -1,12 +1,12 @@
 
-numOfLevels = 10
+numOfLevels = 3
 
 ## Cave size
 fullLevelMap_X = 200
 fullLevelMap_Y = 200
 
 ## Interface size
-X = 15
+X = 30
 Y = 12
 
 Y_CONST = (Y * 2 - 1)
@@ -48,6 +48,8 @@ WALLS = {
 OTHER_ICONS = {
 "FREE_SPACE": "`",
 "PLAYER": "@",
+"LEVEL_UP": "^",
+"LEVEL_DOWN": "V",
 "ADDITIONAL_TIME": "H"
 }
 
