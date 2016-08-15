@@ -25,10 +25,11 @@ class MainClass():
             keyPress = getch()
 
             if (ord(keyPress) == config.SPACE):
-                self.Core.message = ''
-                self.Core.deletedSymb = config.OTHER_ICONS["FREE_SPACE"]
-                self.Core.movePointIncremental()
-                self.Core.showCave()
+                #self.Core.message = ''
+                #self.Core.deletedSymb = config.OTHER_ICONS["FREE_SPACE"]
+                #self.Core.movePointIncremental()
+                #self.Core.showCave()
+                self.Core.move(0, 0)
 
             if (ord(keyPress) == config.UP):
                 self.Core.move(0, -1)
