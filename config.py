@@ -1,5 +1,3 @@
-__author__ = 'n7701-00-091'
-
 
 numOfLevels = 10
 

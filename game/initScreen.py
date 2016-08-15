@@ -1,8 +1,12 @@
-__author__ = 'n7701-00-091'
 
 import os, time
 import config
 from msvcrt import getch
+
+
+#####################################################################################
+###                            Class startGameScr                                 ###
+#####################################################################################
 
 class startGameScr():
 
@@ -19,6 +23,11 @@ class startGameScr():
     def printStartMenu(self):
         for x in range(len(self.textStartGame)):
             print(self.textStartGame[x])
+
+
+#####################################################################################
+###                            Class endGame                                      ###
+#####################################################################################
 
 class endGame():
 
