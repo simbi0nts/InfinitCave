@@ -1,23 +1,23 @@
-
 import config
 from random import *
 import os, math
 from game.createLevel import CreateFirstLevel
+from game.movementModul import movementLogic
 
 #####################################################################################
 ###                            Class gameCore                                     ###
 #####################################################################################
 
 class gameCore():
-
     def __init__(self):
 
-        self.caveMap = [[config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)] for y in range(config.Y_CONST)]
+        self.caveMap = [[config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)] for y in
+                        range(config.Y_CONST)]
         self.recompileMap = [[" " for x in range(config.X_CONST)] for y in range(config.Y_CONST)]
         self.startPosition()
         self.movePointsDone = 0
         self.movePointsLeft = 450
-        self.movesToRemoveOneLightPoint = 700
+        self.movesToRemoveOneLightPoint = 300
         self.lightPoints = 0
         self.healthPointsMax = 40
         self.healthPointsNow = 40
@@ -25,37 +25,39 @@ class gameCore():
         self.flag = 1
         self.deletedSymb = config.OTHER_ICONS["FREE_SPACE"]
         self.voidArray = [config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)]
-        self.level = 0
+        self.curentFloor = 0
         self.newLevels = CreateFirstLevel()
-        self.X = (config.fullLevelMap_X + config.X_CONST*6)//2
-        self.Y = (config.fullLevelMap_Y + config.Y_CONST*6)//2
+        #self.X = (config.fullLevelMap_X + config.X_CONST * 6) // 2
+        #self.Y = (config.fullLevelMap_Y + config.Y_CONST * 6) // 2
+
+        self.movementLogic = movementLogic()
+        self.movementLogic.caveMap = self.caveMap
+        self.movementLogic.curentFloor = self.curentFloor
+        self.movementLogic.newLevels = self.newLevels.levelMap
+
         self.currentCave()
 
 
-
-
-#####################################################################################
+    #####################################################################################
     def startPosition(self):
-        self.caveMap[config.Y_CONST//2][config.X_CONST//2] = config.OTHER_ICONS["PLAYER"]
+        self.caveMap[config.Y_CONST // 2][config.X_CONST // 2] = config.OTHER_ICONS["PLAYER"]
 
 
-
-#####################################################################################
+    #####################################################################################
     def movePointIncremental(self):
 
         if self.deletedSymb == config.OTHER_ICONS["LEVEL_UP"] and self.flag == 1:
-            self.level += 1
-            #self.currentCave()
+            self.movementLogic.curentFloor += 1
         if self.deletedSymb == config.OTHER_ICONS["LEVEL_DOWN"] and self.flag == 1:
-            self.level -= 1
-            #self.currentCave()
+            self.movementLogic.curentFloor -= 1
+
         if self.deletedSymb == config.OTHER_ICONS["ADDITIONAL_TIME"]:
             self.movePointsLeft += 5
-            if self.lightPoints-3 > 0:
+            if self.lightPoints - 3 > 0:
                 self.lightPoints -= 3
             else:
                 self.lightPoints = 0
-            if self.healthPointsNow+5 < self.healthPointsMax:
+            if self.healthPointsNow + 5 < self.healthPointsMax:
                 self.healthPointsNow += 5
             else:
                 self.healthPointsNow = self.healthPointsMax
@@ -66,67 +68,87 @@ class gameCore():
             else:
                 self.movePointsLeft -= 1
             self.movesToRemoveOneLightPoint -= 1
+
         if self.movesToRemoveOneLightPoint == 0:
-            if (self.lightPoints != (min(config.X, config.Y))-2):
+            if (self.lightPoints != (min(config.X, config.Y)) - 2):
                 self.lightPoints += 1
             if self.movePointsLeft == 0:
                 self.movesToRemoveOneLightPoint = randint(1, 3)
             else:
                 self.movesToRemoveOneLightPoint = randint(3, 6)
-        if (self.lightPoints == (min(config.X, config.Y))-2):
+
+        if (self.lightPoints == (min(config.X, config.Y)) - 2):
             if randint(0, 3) < 1:
                 self.healthPointsNow -= 4
                 self.message += 'SOMETHING IN THE DARK HURTS YOU! '
             else:
                 self.healthPointsNow -= 2
                 self.message += 'YOU ARE FREEZING! '
+
         self.movePointsDone += 1
 
 
-
-#####################################################################################
+    #####################################################################################
     def move(self, HorizontalMove, VerticalMove):
 
         self.message = ''
-        if (self.caveMap[(config.Y_CONST//2)+VerticalMove][config.X_CONST//2+HorizontalMove] not in config.WALLS.values())\
+
+        if (self.caveMap[(config.Y_CONST // 2) + VerticalMove][config.X_CONST // 2 + HorizontalMove] not in config.WALLS.values()) \
                 and (HorizontalMove != 0 or VerticalMove != 0):
+
             if self.deletedSymb != config.OTHER_ICONS["LEVEL_DOWN"] or self.deletedSymb != config.OTHER_ICONS["LEVEL_UP"]:
-                #self.caveMap[config.Y_CONST//2][config.X_CONST//2] = config.OTHER_ICONS["FREE_SPACE"]
-                self.newLevels.levelMap[self.level][self.Y+config.Y_CONST//2][self.X+config.X_CONST//2] = config.OTHER_ICONS["FREE_SPACE"]
+                self.newLevels.levelMap[self.movementLogic.curentFloor][self.movementLogic.Y + config.Y_CONST // 2][self.movementLogic.X + config.X_CONST // 2] = \
+                    config.OTHER_ICONS["FREE_SPACE"]
+
             if self.deletedSymb == config.OTHER_ICONS["LEVEL_DOWN"]:
-                self.newLevels.levelMap[self.level][self.Y+config.Y_CONST//2][self.X+config.X_CONST//2] = config.OTHER_ICONS["LEVEL_UP"]
+                self.newLevels.levelMap[self.movementLogic.curentFloor][self.movementLogic.Y + config.Y_CONST // 2][self.movementLogic.X + config.X_CONST // 2] = \
+                    config.OTHER_ICONS["LEVEL_UP"]
                 self.flag = 1
+
             if self.deletedSymb == config.OTHER_ICONS["LEVEL_UP"]:
-                self.newLevels.levelMap[self.level][self.Y+config.Y_CONST//2][self.X+config.X_CONST//2] = config.OTHER_ICONS["LEVEL_DOWN"]
+                self.newLevels.levelMap[self.movementLogic.curentFloor][self.movementLogic.Y + config.Y_CONST // 2][self.movementLogic.X + config.X_CONST // 2] = \
+                    config.OTHER_ICONS["LEVEL_DOWN"]
                 self.flag = 1
-            self.deletedSymb = self.caveMap[(config.Y_CONST//2)+VerticalMove][config.X_CONST//2+HorizontalMove]
+
+            self.deletedSymb = self.caveMap[(config.Y_CONST // 2) + VerticalMove][config.X_CONST // 2 + HorizontalMove]
+
             if VerticalMove != 0:
+
                 if VerticalMove == -1:
-                    for y in range(config.Y_CONST-1):
-                        self.caveMap[config.Y_CONST-y-1] = self.caveMap[config.Y_CONST-y-2]
-                    self.Y -= 1
-                    self.caveMap[0] = self.newLevels.levelMap[self.level][self.Y+1][self.X:self.X+config.X_CONST]
-                    #self.caveMap[0] = [config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)]
+
+                    self.movementLogic.moveUp()
+                    # for y in range(config.Y_CONST - 1):
+                    #     self.caveMap[config.Y_CONST - y - 1] = self.caveMap[config.Y_CONST - y - 2]
+                    # self.Y -= 1
+                    # self.caveMap[0] = self.newLevels.levelMap[self.curentFloor][self.Y + 1][self.X:self.X + config.X_CONST]
+
                 elif VerticalMove == 1:
-                    for y in range(config.Y_CONST-1):
-                        self.caveMap[y] = self.caveMap[y+1]
-                    self.Y += 1
-                    self.caveMap[config.Y_CONST-1] = self.newLevels.levelMap[self.level][self.Y+config.Y_CONST][self.X:self.X+config.X_CONST]
-                    #self.caveMap[config.Y_CONST-1] = [config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)]
+
+                    self.movementLogic.moveDown()
+                    # for y in range(config.Y_CONST - 1):
+                    #     self.caveMap[y] = self.caveMap[y + 1]
+                    # self.Y += 1
+                    # self.caveMap[config.Y_CONST - 1] = self.newLevels.levelMap[self.curentFloor][self.Y + config.Y_CONST][
+                    #                                    self.X:self.X + config.X_CONST]
+
             elif HorizontalMove != 0:
+
                 if HorizontalMove == -1:
-                    self.X -= 1
-                    for y in range(config.Y_CONST):
-                        #self.caveMap[y] = self.newLevels.levelMap[self.level][self.Y+y][self.X:self.X+config.X_CONST]
-                        self.caveMap[y] = self.caveMap[y][:-1]
-                        self.caveMap[y].insert(0, self.newLevels.levelMap[self.level][self.Y+y][self.X])
-                    #self.caveMap[y].insert(0, config.OTHER_ICONS["FREE_SPACE"])
+
+                    self.movementLogic.moveLeft()
+                    # self.X -= 1
+                    # for y in range(config.Y_CONST):
+                    #     self.caveMap[y] = self.caveMap[y][:-1]
+                    #     self.caveMap[y].insert(0, self.newLevels.levelMap[self.curentFloor][self.Y + y][self.X])
+
                 if HorizontalMove == 1:
-                    self.X += 1
-                    for y in range(config.Y_CONST):
-                        self.caveMap[y] = self.caveMap[y][1:]
-                        self.caveMap[y].append(self.newLevels.levelMap[self.level][self.Y+y][self.X+config.X_CONST])
-                    #self.caveMap[y].append(config.OTHER_ICONS["FREE_SPACE"])
+
+                    self.movementLogic.moveRight()
+                    # self.X += 1
+                    # for y in range(config.Y_CONST):
+                    #     self.caveMap[y] = self.caveMap[y][1:]
+                    #     self.caveMap[y].append(self.newLevels.levelMap[self.curentFloor][self.Y + y][self.X + config.X_CONST])
+
             self.movePointIncremental()
             self.showCave()
 
@@ -137,52 +159,60 @@ class gameCore():
             self.showCave()
 
 
-#####################################################################################
-    def doMessUp(self):
+        ##################################################################################### - THAT ONE DON'T REALLY NEED ANYMORE
 
-        someRandomIncremental = randint(1,10)
-        for i in range(someRandomIncremental):
-            freeSpaceLeft = 0
-            inc = 0
-            for y in range(config.Y_CONST):
-                freeSpaceLeft += self.caveMap[y].count(config.OTHER_ICONS["FREE_SPACE"]) + self.caveMap[y].count(config.OTHER_ICONS["ADDITIONAL_TIME"])
-            findElement = randint(0, freeSpaceLeft)
-            hChance = randint(0, 10)
-            for y in range(config.Y_CONST):
-                for x in range(config.X_CONST):
-                    if self.caveMap[y][x] == config.OTHER_ICONS["FREE_SPACE"] or self.caveMap[y][x] == config.OTHER_ICONS["ADDITIONAL_TIME"]:
-                        if inc != findElement:
-                            inc += 1
-                        else:
-                            if hChance == 1:
-                                self.caveMap[y][x] = config.OTHER_ICONS["ADDITIONAL_TIME"]
-                            else:
-                                self.caveMap[y][x] = config.WALLS["WALL_ALONE"]
-                            inc += 1
-                            continue
-        self.startPosition()
+#    def doMessUp(self):
+#
+#        someRandomIncremental = randint(1, 10)
+#        for i in range(someRandomIncremental):
+#            freeSpaceLeft = 0
+#            inc = 0
+#            for y in range(config.Y_CONST):
+#                freeSpaceLeft += self.caveMap[y].count(config.OTHER_ICONS["FREE_SPACE"]) + self.caveMap[y].count(
+#                    config.OTHER_ICONS["ADDITIONAL_TIME"])
+#            findElement = randint(0, freeSpaceLeft)
+#            hChance = randint(0, 10)
+#            for y in range(config.Y_CONST):
+#                for x in range(config.X_CONST):
+#                    if self.caveMap[y][x] == config.OTHER_ICONS["FREE_SPACE"] or self.caveMap[y][x] == \
+#                            config.OTHER_ICONS["ADDITIONAL_TIME"]:
+#                        if inc != findElement:
+#                            inc += 1
+#                        else:
+#                            if hChance == 1:
+#                                self.caveMap[y][x] = config.OTHER_ICONS["ADDITIONAL_TIME"]
+#                            else:
+#                                self.caveMap[y][x] = config.WALLS["WALL_ALONE"]
+#                            inc += 1
+#                            continue
+#        self.startPosition()
 
+
+    #####################################################################################
 
     def currentCave(self):
         for y in range(config.Y_CONST):
             for x in range(config.X_CONST):
-                self.caveMap[y][x] = self.newLevels.levelMap[self.level][self.Y+y][self.X+x]
+                self.caveMap[y][x] = self.movementLogic.newLevels[self.movementLogic.curentFloor][self.movementLogic.Y + y][self.movementLogic.X + x]
 
 
-#####################################################################################
+            #####################################################################################
+
     def showCave(self):
 
         os.system('cls')
         self.currentCave()
         self.startPosition()
-        #self.doMessUp()
+        # self.doMessUp()
         self.recompileLevel()
         print('\n')
+        curentFloor = '\tCurrent floor: ' + str(self.curentFloor)
+        curentFloor = self.beautySpace(curentFloor)
         movesDone = '\tMoves done: ' + str(self.movePointsDone)
         movesDone = self.beautySpace(movesDone)
         movesLeft = '\tMoves left: ' + str(self.movePointsLeft)
         movesLeft = self.beautySpace(movesLeft)
-        print(movesDone + '\n' + movesLeft)
+        print(curentFloor + '\n' + movesDone + '\n' + movesLeft)
         healthBar = '{'
         for i in range(self.healthPointsMax):
             if i < self.healthPointsNow:
@@ -201,7 +231,8 @@ class gameCore():
 
 
 
-#####################################################################################
+        #####################################################################################
+
     def recompileLevel(self):
 
         for y in range(config.Y_CONST):
@@ -209,16 +240,16 @@ class gameCore():
                 code_id = 0
                 if self.caveMap[y][x] in config.WALLS.values():
                     if y > 0:
-                        if self.caveMap[y-1][x] in config.WALLS.values():
+                        if self.caveMap[y - 1][x] in config.WALLS.values():
                             code_id += 1
-                    if x < config.X_CONST-1:
-                        if self.caveMap[y][x+1] in config.WALLS.values():
+                    if x < config.X_CONST - 1:
+                        if self.caveMap[y][x + 1] in config.WALLS.values():
                             code_id += 10
-                    if y < config.Y_CONST-1:
-                        if self.caveMap[y+1][x] in config.WALLS.values():
+                    if y < config.Y_CONST - 1:
+                        if self.caveMap[y + 1][x] in config.WALLS.values():
                             code_id += 100
                     if x > 0:
-                        if self.caveMap[y][x-1] in config.WALLS.values():
+                        if self.caveMap[y][x - 1] in config.WALLS.values():
                             code_id += 1000
                     if code_id == 0:
                         self.caveMap[y][x] = config.WALLS["WALL_ALONE"]
@@ -247,7 +278,8 @@ class gameCore():
 
 
 
-#####################################################################################
+                    #####################################################################################
+
     def recomLightMap(self, recompileMap, radLight):
 
         vekt_y = (config.Y - 1) - radLight
@@ -256,12 +288,13 @@ class gameCore():
         k_vekt_y = 1
         k_vekt = vekt_x
         if vekt_x < vekt_y:
-            k_vekt_y = vekt_y/vekt_x
+            k_vekt_y = vekt_y / vekt_x
             k_vekt = vekt_y
         elif vekt_x > vekt_y:
-            k_vekt_x = vekt_x/vekt_y
+            k_vekt_x = vekt_x / vekt_y
             k_vekt = vekt_x
-        array = [[math.sqrt((((y-config.Y+1)*k_vekt_x)**2+((x-config.X+1)*k_vekt_y)**2)) for x in range(config.X_CONST)] for y in range(config.Y_CONST)]
+        array = [[math.sqrt((((y - config.Y + 1) * k_vekt_x) ** 2 + ((x - config.X + 1) * k_vekt_y) ** 2)) for x in
+                  range(config.X_CONST)] for y in range(config.Y_CONST)]
         for y in range(config.Y_CONST):
             for x in range(config.X_CONST):
                 if array[y][x] <= k_vekt:
@@ -271,10 +304,11 @@ class gameCore():
 
 
 
-#####################################################################################
+                #####################################################################################
+
     def beautySpace(self, returnString):
         spaceString = '\t\t'
-        for x in range(config.X - len(returnString)//2):
+        for x in range(config.X - len(returnString) // 2):
             spaceString += ' '
         returnString = spaceString + returnString
         return returnString
