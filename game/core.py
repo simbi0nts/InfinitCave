@@ -264,8 +264,21 @@ class GameCore():
                     y_temp = y
                     x_temp = x
                     while x_array != -1 and y_array != -1:
-                        y_array_tmp = y_array * (y_array / (config.Y_CONST // 2 - 1))
-                        x_array_tmp = x_array * (x_array / (config.X_CONST // 2 - 1))
+                        x_array_tmp = y_array_tmp = 1
+                        if x_array < y_array:
+                            if x_array != 0:
+                                x_array_tmp = math.sqrt((x_array - 1) ** 2 + y_array ** 2)
+                                y_array_tmp = math.sqrt(x_array ** 2 + (y_array - 1) ** 2)
+                                # x_array_tmp = x_array * (((config.X_CONST // 2) - 1) // x_array)
+                            else:
+                                x_array_tmp = 0
+                        elif x_array > y_array:
+                            if y_array != 0:
+                                x_array_tmp = math.sqrt((x_array - 1) ** 2 + y_array ** 2)
+                                y_array_tmp = math.sqrt(x_array ** 2 + (y_array - 1) ** 2)
+                                # y_array_tmp = y_array * (((config.Y_CONST // 2) - 1) // y_array)
+                            else:
+                                y_array_tmp = 0
                         temp_array += [[y_temp, x_temp]]
                         if recompile_map[y_temp][x_temp] != ' ':
                             if x_array_tmp > y_array_tmp:
@@ -306,10 +319,10 @@ class GameCore():
         for y in range(config.Y_CONST - 1):
             for x in range(config.X_CONST - 1):
                 if recompile_map[y][x] in config.WALLS.values() and \
-                        (recompile_map[y + 1][x] not in config.OTHER_ICONS.values()  and
-                         recompile_map[y][x + 1] not in config.OTHER_ICONS.values()  and
-                         recompile_map[y - 1][x] not in config.OTHER_ICONS.values()  and
-                         recompile_map[y][x - 1] not in config.OTHER_ICONS.values() ):
+                        (recompile_map[y + 1][x] not in config.OTHER_ICONS.values() and
+                         recompile_map[y][x + 1] not in config.OTHER_ICONS.values() and
+                         recompile_map[y - 1][x] not in config.OTHER_ICONS.values() and
+                         recompile_map[y][x - 1] not in config.OTHER_ICONS.values()):
                     recompile_map[y][x] = ' '
         if recompile_map[config.Y_CONST - 1][config.X_CONST // 2] in config.WALLS.values():
             recompile_map[config.Y_CONST - 1][config.X_CONST // 2] = ' '
