@@ -16,8 +16,8 @@ class gameCore():
         self.recompileMap = [[" " for x in range(config.X_CONST)] for y in range(config.Y_CONST)]
         self.startPosition()
         self.movePointsDone = 0
-        self.movePointsLeft = 45
-        self.movesToRemoveOneLightPoint = 7
+        self.movePointsLeft = 450
+        self.movesToRemoveOneLightPoint = 700
         self.lightPoints = 0
         self.healthPointsMax = 40
         self.healthPointsNow = 40
@@ -28,6 +28,7 @@ class gameCore():
         self.newLevels = CreateFirstLevel()
         self.X = (config.fullLevelMap_X - config.X_CONST)//2
         self.Y = (config.fullLevelMap_Y - config.Y_CONST)//2
+        self.currentCave()
 
 
 
@@ -88,22 +89,27 @@ class gameCore():
                     for y in range(config.Y_CONST-1):
                         self.caveMap[config.Y_CONST-y-1] = self.caveMap[config.Y_CONST-y-2]
                     self.Y -= 1
+                    self.caveMap[0] = self.newLevels.levelMap[self.level][self.Y][self.X:self.X+config.X_CONST]
                     #self.caveMap[0] = [config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)]
                 elif VerticalMove == 1:
                     for y in range(config.Y_CONST-1):
                         self.caveMap[y] = self.caveMap[y+1]
                     self.Y += 1
+                    self.caveMap[config.Y_CONST-1] = self.newLevels.levelMap[self.level][self.Y][self.X:self.X+config.X_CONST]
                     #self.caveMap[config.Y_CONST-1] = [config.OTHER_ICONS["FREE_SPACE"] for x in range(config.X_CONST)]
             elif HorizontalMove != 0:
-                for y in range(config.Y_CONST):
-                    if HorizontalMove == -1:
+                if HorizontalMove == -1:
+                    self.X -= 1
+                    for y in range(config.Y_CONST):
                         self.caveMap[y] = self.caveMap[y][:-1]
-                        self.X += 1
-                        #self.caveMap[y].insert(0, config.OTHER_ICONS["FREE_SPACE"])
-                    if HorizontalMove == 1:
+                        self.caveMap[y].insert(0, self.newLevels.levelMap[self.level][self.Y][self.X])
+                    #self.caveMap[y].insert(0, config.OTHER_ICONS["FREE_SPACE"])
+                if HorizontalMove == 1:
+                    self.X += 1
+                    for y in range(config.Y_CONST):
                         self.caveMap[y] = self.caveMap[y][1:]
-                        self.X -= 1
-                        #self.caveMap[y].append(config.OTHER_ICONS["FREE_SPACE"])
+                        self.caveMap[y].append(self.newLevels.levelMap[self.level][self.Y][self.X+config.X_CONST])
+                    #self.caveMap[y].append(config.OTHER_ICONS["FREE_SPACE"])
             self.movePointIncremental()
             self.showCave()
 
@@ -145,7 +151,7 @@ class gameCore():
     def showCave(self):
 
         os.system('cls')
-        self.currentCave()
+        #self.currentCave()
         self.startPosition()
         #self.doMessUp()
         self.recompileLevel()

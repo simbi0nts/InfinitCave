@@ -28,10 +28,10 @@ class CreateFirstLevel():
 
 
     def tiltNewLevelFunc(self):
-        self.tiltNewLevel = [['' for y in range(config.fullLevelMap_Y+60)] for x in range(config.fullLevelMap_X+60)]
+        self.tiltNewLevel = [['' for y in range(config.fullLevelMap_Y+80)] for x in range(config.fullLevelMap_X+80)]
         for x in range(config.fullLevelMap_X):
             for y in range(config.fullLevelMap_Y):
-                self.tiltNewLevel[y+30][x+30] = self.blankLevel[y][x]
+                self.tiltNewLevel[y+40][x+40] = self.blankLevel[y][x]
 
 
     def firstLevel(self):
