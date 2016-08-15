@@ -2,7 +2,6 @@ from msvcrt import getch
 from game.core import gameCore
 import config, os
 from game.initScreen import endGame
-from random import *
 
 class MainClass():
 
@@ -19,11 +18,6 @@ class MainClass():
 
             if (ord(keyPress) == config.SPACE):
                 self.Core.doMessUp()
-                self.Core.movesToRemoveOneLightPoint -= 1
-                if self.Core.movesToRemoveOneLightPoint == 0:
-                    self.Core.lightPoints += 1
-                    self.Core.movesToRemoveOneLightPoint = randint(3, 6)
-                self.Core.showCave()
 
             if (ord(keyPress) == config.UP):
                 self.Core.move(0, -1)
@@ -47,14 +41,14 @@ class MainClass():
                         os.system("cls")
                         print('\n\n\n\n\n\n\n\t\t\t\t PRESS ANY ARROW KEY')
 
-            if (self.Core.movePointsLeft == 0 and self.Core.healthPointsNow <= 0):
+            if (self.Core.movePointsLeft == 0):
                     self.selfRunning = self.endGame.newGame("\n\n\t\t\t\t YOU ARE STARVE")
                     if self.selfRunning:
                         self.Core = gameCore()
                         os.system("cls")
                         print('\n\n\n\n\n\n\n\t\t\t\t PRESS ANY ARROW KEY')
 
-            if (self.Core.lightPoints == (min(config.X, config.Y))-2 and self.Core.healthPointsNow <= 0):
+            if (self.Core.lightPoints == (max(config.X, config.Y)-1)):
                 self.selfRunning = self.endGame.newGame("\n\n\t\t\t    YOU ARE OUT OF LIGHT")
                 if self.selfRunning:
                     self.Core = gameCore()
