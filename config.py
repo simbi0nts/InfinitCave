@@ -1,13 +1,12 @@
-
-numOfLevels = 3
+numOfLevels = 10
 
 ## Cave size
 fullLevelMap_X = 200
 fullLevelMap_Y = 200
 
 ## Interface size
-X = 30
-Y = 12
+X = 25
+Y = 15
 
 Y_CONST = (Y * 2 - 1)
 X_CONST = (X * 2 - 1)
@@ -30,27 +29,26 @@ WALLS = {
 '''
 
 WALLS = {
-"WALL_ALONE": "¤",
-"WALL_VERTICAL": "║",
-"WALL_HORIZONTAL": "═",
-"WALL_CORNER_UP_LEFT": "╝",
-"WALL_CORNER_UP_RIGHT": "╚",
-"WALL_CORNER_DOWN_LEFT": "╗",
-"WALL_CORNER_DOWN_RIGHT": "╔",
-"WALL_SIDE_LEFT": "╠",
-"WALL_SIDE_RIGHT": "╣",
-"WALL_SIDE_UP": "╩",
-"WALL_SIDE_DOWN": "╦",
-"WALL_CROSS": "╬"
+    "WALL_ALONE": "¤",
+    "WALL_VERTICAL": "║",
+    "WALL_HORIZONTAL": "═",
+    "WALL_CORNER_UP_LEFT": "╝",
+    "WALL_CORNER_UP_RIGHT": "╚",
+    "WALL_CORNER_DOWN_LEFT": "╗",
+    "WALL_CORNER_DOWN_RIGHT": "╔",
+    "WALL_SIDE_LEFT": "╠",
+    "WALL_SIDE_RIGHT": "╣",
+    "WALL_SIDE_UP": "╩",
+    "WALL_SIDE_DOWN": "╦",
+    "WALL_CROSS": "╬"
 }
 
-
 OTHER_ICONS = {
-"FREE_SPACE": "`",
-"PLAYER": "@",
-"LEVEL_UP": "^",
-"LEVEL_DOWN": "V",
-"ADDITIONAL_TIME": "H"
+    "FREE_SPACE": "`",
+    "PLAYER": "@",
+    "LEVEL_UP": "^",
+    "LEVEL_DOWN": "V",
+    "ADDITIONAL_TIME": "H"
 }
 
 ## ⃝∩⌐⌂

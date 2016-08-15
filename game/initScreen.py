@@ -1,4 +1,3 @@
-
 import os, time
 import config
 from msvcrt import getch
@@ -9,7 +8,6 @@ from msvcrt import getch
 #####################################################################################
 
 class startGameScr():
-
     def __init__(self):
         self.textStartGame = [' ', ' ', ' ',
                               ' _______  ______    _______  _______  _______    _______  __    _  __   __    ___   _  _______  __   __ ',
@@ -30,24 +28,23 @@ class startGameScr():
 #####################################################################################
 
 class endGame():
-
     def __init__(self):
-        self.textGameOver = [' ',' ',' ',
-                            '     _______  _______  __   __  _______    _______  __   __  _______  ______  ',
-                            '    |       ||   _   ||  |_|  ||       |  |       ||  | |  ||       ||    _ |  ',
-                            '    |    ___||  |_|  ||       ||    ___|  |   _   ||  |_|  ||    ___||   | ||  ',
-                            '    |   | __ |       ||       ||   |___   |  | |  ||       ||   |___ |   |_||_ ',
-                            '    |   ||  ||       ||       ||    ___|  |  |_|  ||       ||    ___||    __  |',
-                            '    |   |_| ||   _   || ||_|| ||   |___   |       | |     | |   |___ |   |  | |',
-                            '    |_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|']
+        self.textGameOver = [' ', ' ', ' ',
+                             '     _______  _______  __   __  _______    _______  __   __  _______  ______  ',
+                             '    |       ||   _   ||  |_|  ||       |  |       ||  | |  ||       ||    _ |  ',
+                             '    |    ___||  |_|  ||       ||    ___|  |   _   ||  |_|  ||    ___||   | ||  ',
+                             '    |   | __ |       ||       ||   |___   |  | |  ||       ||   |___ |   |_||_ ',
+                             '    |   ||  ||       ||       ||    ___|  |  |_|  ||       ||    ___||    __  |',
+                             '    |   |_| ||   _   || ||_|| ||   |___   |       | |     | |   |___ |   |  | |',
+                             '    |_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|']
 
     def animation(self):
         for i in range(len(self.textGameOver)):
             os.system('cls')
             for x in range(len(self.textGameOver)):
-                if x >= len(self.textGameOver)-i:
+                if x >= len(self.textGameOver) - i:
                     print(self.textGameOver[x])
-            time.sleep(1/10)
+            time.sleep(1 / 10)
 
     def newGame(self, text):
         self.animation()
@@ -61,5 +58,5 @@ class endGame():
                 return False
             else:
                 os.system('cls')
-                for x in range(len(self.textGameOver)-1): print(self.textGameOver[x+1])
+                for x in range(len(self.textGameOver) - 1): print(self.textGameOver[x + 1])
                 print("\n\n\t\t\t\t  Wrong answer")
