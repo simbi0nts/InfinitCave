@@ -2,22 +2,33 @@ from msvcrt import getch
 from game.core import gameCore
 import config, os
 from game.initScreen import endGame
+from game.initScreen import startGameScr
+from random import *
 
 class MainClass():
 
     def __init__(self):
+
         self.selfRunning = True
         self.endGame = endGame()
+        self.startGameSrc = startGameScr()
         self.Core = gameCore()
 
     def startGame(self):
+
+        self.startGameSrc.printStartMenu()
 
         while(self.selfRunning):
 
             keyPress = getch()
 
             if (ord(keyPress) == config.SPACE):
-                self.Core.doMessUp()
+                self.Core.message = ''
+                self.Core.movesToRemoveOneLightPoint -= 1
+                if self.Core.movesToRemoveOneLightPoint == 0:
+                    self.Core.lightPoints += 1
+                    self.Core.movesToRemoveOneLightPoint = randint(3, 6)
+                self.Core.showCave()
 
             if (ord(keyPress) == config.UP):
                 self.Core.move(0, -1)
@@ -39,21 +50,21 @@ class MainClass():
                     if self.selfRunning:
                         self.Core = gameCore()
                         os.system("cls")
-                        print('\n\n\n\n\n\n\n\t\t\t\t PRESS ANY ARROW KEY')
+                        self.startGameSrc.printStartMenu()
 
-            if (self.Core.movePointsLeft == 0):
+            if (self.Core.movePointsLeft == 0 and self.Core.healthPointsNow <= 0):
                     self.selfRunning = self.endGame.newGame("\n\n\t\t\t\t YOU ARE STARVE")
                     if self.selfRunning:
                         self.Core = gameCore()
                         os.system("cls")
-                        print('\n\n\n\n\n\n\n\t\t\t\t PRESS ANY ARROW KEY')
+                        self.startGameSrc.printStartMenu()
 
-            if (self.Core.lightPoints == (max(config.X, config.Y)-1)):
+            if (self.Core.lightPoints == (min(config.X, config.Y))-2 and self.Core.healthPointsNow <= 0):
                 self.selfRunning = self.endGame.newGame("\n\n\t\t\t    YOU ARE OUT OF LIGHT")
                 if self.selfRunning:
                     self.Core = gameCore()
                     os.system("cls")
-                    print('\n\n\n\n\n\n\n\t\t\t\t PRESS ANY ARROW KEY')
+                    self.startGameSrc.printStartMenu()
 
 if __name__=='__main__':
     mainCLS = MainClass()
