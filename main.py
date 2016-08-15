@@ -3,7 +3,8 @@ from game.core import gameCore
 import config, os
 from game.initScreen import endGame
 from game.initScreen import startGameScr
-from random import *
+
+
 
 class MainClass():
 
@@ -12,6 +13,7 @@ class MainClass():
         self.selfRunning = True
         self.endGame = endGame()
         self.startGameSrc = startGameScr()
+
         self.Core = gameCore()
 
     def startGame(self):
@@ -24,10 +26,8 @@ class MainClass():
 
             if (ord(keyPress) == config.SPACE):
                 self.Core.message = ''
-                self.Core.movesToRemoveOneLightPoint -= 1
-                if self.Core.movesToRemoveOneLightPoint == 0:
-                    self.Core.lightPoints += 1
-                    self.Core.movesToRemoveOneLightPoint = randint(3, 6)
+                self.Core.deletedSymb = config.OTHER_ICONS["FREE_SPACE"]
+                self.Core.movePointIncremental()
                 self.Core.showCave()
 
             if (ord(keyPress) == config.UP):
@@ -51,6 +51,7 @@ class MainClass():
                         self.Core = gameCore()
                         os.system("cls")
                         self.startGameSrc.printStartMenu()
+                    else: break
 
             if (self.Core.movePointsLeft == 0 and self.Core.healthPointsNow <= 0):
                     self.selfRunning = self.endGame.newGame("\n\n\t\t\t\t YOU ARE STARVE")
@@ -58,6 +59,7 @@ class MainClass():
                         self.Core = gameCore()
                         os.system("cls")
                         self.startGameSrc.printStartMenu()
+                    else: break
 
             if (self.Core.lightPoints == (min(config.X, config.Y))-2 and self.Core.healthPointsNow <= 0):
                 self.selfRunning = self.endGame.newGame("\n\n\t\t\t    YOU ARE OUT OF LIGHT")
@@ -65,6 +67,7 @@ class MainClass():
                     self.Core = gameCore()
                     os.system("cls")
                     self.startGameSrc.printStartMenu()
+                else: break
 
 if __name__=='__main__':
     mainCLS = MainClass()
