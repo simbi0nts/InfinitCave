@@ -1,77 +1,87 @@
 from msvcrt import getch
-from game.core import gameCore
-import config, os
-from game.initScreen import endGame
-from game.initScreen import startGameScr
+from game.core import GameCore
+import config
+import os
+from game.initScreen import EndGame
+from game.initScreen import StartGameScr
 
 
 class MainClass():
     def __init__(self):
 
-        self.selfRunning = True
-        self.endGame = endGame()
-        self.startGameSrc = startGameScr()
+        self.self_running = True
+        self.EndGame = EndGame()
+        self.StartGameSrc = StartGameScr()
+        self.Core = GameCore()
 
-        self.Core = gameCore()
+    def start_game(self):
 
-    def startGame(self):
+        self.StartGameSrc.print_start_menu()
 
-        self.startGameSrc.printStartMenu()
+        key_press = getch()
 
-        keyPress = getch()
+        if ord(key_press):
+            self.Core.show_cave()
 
-        if ord(keyPress): self.Core.showCave()
+        while self.self_running:
 
-        while self.selfRunning:
+            key_press = getch()
 
-            keyPress = getch()
-
-            if ord(keyPress) == config.SPACE:
+            if ord(key_press) == config.SPACE:
                 self.Core.move(0, 0)
 
-            if ord(keyPress) == config.UP:
+            if ord(key_press) == config.UP:
                 self.Core.move(0, -1)
 
-            if ord(keyPress) == config.DOWN:
+            if ord(key_press) == config.DOWN:
                 self.Core.move(0, 1)
 
-            if ord(keyPress) == config.RIGHT:
+            if ord(key_press) == config.RIGHT:
                 self.Core.move(1, 0)
 
-            if ord(keyPress) == config.LEFT:
+            if ord(key_press) == config.LEFT:
                 self.Core.move(-1, 0)
 
-            if (self.Core.caveMap[(config.Y_CONST // 2) + 1][config.X_CONST // 2] in config.WALLS.values() and \
-                            self.Core.caveMap[(config.Y_CONST // 2) - 1][config.X_CONST // 2] in config.WALLS.values() and \
-                            self.Core.caveMap[config.Y_CONST // 2][(config.X_CONST // 2) + 1] in config.WALLS.values() and \
-                            self.Core.caveMap[config.Y_CONST // 2][(config.X_CONST // 2) - 1] in config.WALLS.values()):
-                self.selfRunning = self.endGame.newGame("\n\n\t\t\t\t YOU ARE DEAD")
-                if self.selfRunning:
-                    self.Core = gameCore()
+            if (self.Core.cave_map[(config.Y_CONST // 2) + 1][config.X_CONST // 2] in config.WALLS.values() and
+                self.Core.cave_map[(config.Y_CONST // 2) - 1][config.X_CONST // 2] in config.WALLS.values() and
+                self.Core.cave_map[config.Y_CONST // 2][(config.X_CONST // 2) + 1] in config.WALLS.values() and
+                    self.Core.cave_map[config.Y_CONST // 2][(config.X_CONST // 2) - 1] in config.WALLS.values()):
+                self.self_running = self.EndGame.new_game("\n\n\t\t\t           YOU ARE DEAD")
+                if self.self_running:
+                    self.Core = GameCore()
                     os.system("cls")
-                    self.startGameSrc.printStartMenu()
+                    self.StartGameSrc.print_start_menu()
                 else:
                     break
 
-            if self.Core.movePointsLeft == 0 and self.Core.healthPointsNow <= 0:
-                self.selfRunning = self.endGame.newGame("\n\n\t\t\t\t YOU ARE STARVE")
-                if self.selfRunning:
-                    self.Core = gameCore()
+            if self.Core.move_points_left == 0 and self.Core.health_points_now <= 0:
+                self.self_running = self.EndGame.new_game("\n\n\t\t\t          YOU ARE STARVE")
+                if self.self_running:
+                    self.Core = GameCore()
                     os.system("cls")
-                    self.startGameSrc.printStartMenu()
+                    self.StartGameSrc.print_start_menu()
                 else:
                     break
 
-            if self.Core.lightPoints == (min(config.X, config.Y)) - 2 and self.Core.healthPointsNow <= 0:
-                self.selfRunning = self.endGame.newGame("\n\n\t\t\t    YOU ARE OUT OF LIGHT")
-                if self.selfRunning:
-                    self.Core = gameCore()
+            if self.Core.light_points == (min(config.X, config.Y)) - 2 and self.Core.health_points_now <= 0:
+                self.self_running = self.EndGame.new_game("\n\n\t\t\t       YOU ARE OUT OF LIGHT")
+                if self.self_running:
+                    self.Core = GameCore()
                     os.system("cls")
-                    self.startGameSrc.printStartMenu()
+                    self.StartGameSrc.print_start_menu()
+                else:
+                    break
+
+            if self.Core.health_points_now <= 0:
+                self.self_running = self.EndGame.new_game("\n\n\t\t\t     KILLED BY A FILTHY ENEMY")
+                if self.self_running:
+                    self.Core = GameCore()
+                    os.system("cls")
+                    self.StartGameSrc.print_start_menu()
                 else:
                     break
 
 
 if __name__ == '__main__':
     mainCLS = MainClass()
-    mainCLS.startGame()
+    mainCLS.start_game()

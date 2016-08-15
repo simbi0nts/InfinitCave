@@ -1,17 +1,17 @@
 numOfLevels = 10
 
-## Cave size
+# Cave size
 fullLevelMap_X = 200
 fullLevelMap_Y = 200
 
-## Interface size
-X = 25
+# Interface size
+X = 15
 Y = 15
 
 Y_CONST = (Y * 2 - 1)
 X_CONST = (X * 2 - 1)
 
-## Icons
+# Icons
 '''  ## OLD_WALLS
 WALLS = {
 "WALL_VERTICAL": "│",
@@ -43,17 +43,19 @@ WALLS = {
     "WALL_CROSS": "╬"
 }
 
+
 OTHER_ICONS = {
     "FREE_SPACE": "`",
     "PLAYER": "@",
     "LEVEL_UP": "^",
     "LEVEL_DOWN": "V",
-    "ADDITIONAL_TIME": "H"
+    "ADDITIONAL_TIME": "H",
+    "ENEMY": "%"
 }
 
-## ⃝∩⌐⌂
+# ⃝∩⌐⌂
 
-## Movement
+# Movement
 UP = 72
 DOWN = 80
 LEFT = 75
