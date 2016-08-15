@@ -1,5 +1,3 @@
-__author__ = 'n7701-00-091'
-
 
 numOfLevels = 10
 
@@ -8,7 +6,7 @@ fullLevelMap_X = 200
 fullLevelMap_Y = 200
 
 ## Interface size
-X = 24
+X = 15
 Y = 12
 
 Y_CONST = (Y * 2 - 1)
