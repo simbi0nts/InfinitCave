@@ -1,20 +1,17 @@
-__author__ = 'n7701-00-091'
-
-
 numOfLevels = 10
 
-## Cave size
+# Cave size
 fullLevelMap_X = 200
 fullLevelMap_Y = 200
 
-## Interface size
-X = 24
-Y = 12
+# Interface size
+X = 15
+Y = 15
 
 Y_CONST = (Y * 2 - 1)
 X_CONST = (X * 2 - 1)
 
-## Icons
+# Icons
 '''  ## OLD_WALLS
 WALLS = {
 "WALL_VERTICAL": "│",
@@ -32,30 +29,33 @@ WALLS = {
 '''
 
 WALLS = {
-"WALL_ALONE": "¤",
-"WALL_VERTICAL": "║",
-"WALL_HORIZONTAL": "═",
-"WALL_CORNER_UP_LEFT": "╝",
-"WALL_CORNER_UP_RIGHT": "╚",
-"WALL_CORNER_DOWN_LEFT": "╗",
-"WALL_CORNER_DOWN_RIGHT": "╔",
-"WALL_SIDE_LEFT": "╠",
-"WALL_SIDE_RIGHT": "╣",
-"WALL_SIDE_UP": "╩",
-"WALL_SIDE_DOWN": "╦",
-"WALL_CROSS": "╬"
+    "WALL_ALONE": "¤",
+    "WALL_VERTICAL": "║",
+    "WALL_HORIZONTAL": "═",
+    "WALL_CORNER_UP_LEFT": "╝",
+    "WALL_CORNER_UP_RIGHT": "╚",
+    "WALL_CORNER_DOWN_LEFT": "╗",
+    "WALL_CORNER_DOWN_RIGHT": "╔",
+    "WALL_SIDE_LEFT": "╠",
+    "WALL_SIDE_RIGHT": "╣",
+    "WALL_SIDE_UP": "╩",
+    "WALL_SIDE_DOWN": "╦",
+    "WALL_CROSS": "╬"
 }
 
 
 OTHER_ICONS = {
-"FREE_SPACE": "`",
-"PLAYER": "@",
-"ADDITIONAL_TIME": "H"
+    "FREE_SPACE": "`",
+    "PLAYER": "@",
+    "LEVEL_UP": "^",
+    "LEVEL_DOWN": "V",
+    "ADDITIONAL_TIME": "H",
+    "ENEMY": "%"
 }
 
-## ⃝∩⌐⌂
+# ⃝∩⌐⌂
 
-## Movement
+# Movement
 UP = 72
 DOWN = 80
 LEFT = 75
