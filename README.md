@@ -21,3 +21,5 @@ What I want to do in future releases:
 * Game Balance
 
 It's still just a little game, but already have my favourite bugs  
+
+Used libraries: os, math, random, time, msvcrt
