@@ -1,12 +1,11 @@
 numOfLevels = 10
 
 # Cave size
-fullLevelMap_X = 200
-fullLevelMap_Y = 200
+fullLevelMap_X = fullLevelMap_Y = 250
 
 # Interface size
-X = 15
-Y = 15
+X = 12
+Y = 12
 
 Y_CONST = (Y * 2 - 1)
 X_CONST = (X * 2 - 1)

@@ -257,43 +257,40 @@ class GameCore():
         dynamic_light_array = [[[math.fabs(y - config.Y + 1), math.fabs(x - config.X + 1)] for x in range(config.X_CONST)] for y in range(config.Y_CONST)]
         for y in range(config.Y_CONST):
             for x in range(config.X_CONST):
+                if x == 0 or y == 0 or x == config.X_CONST-1 or y == config.Y_CONST-1:
+                    recompile_map[y][x] = ' '
+        for y in range(config.Y_CONST):
+            for x in range(config.X_CONST):
                 if recompile_map[y][x] != ' ':
                     temp_array = []
-                    y_array = dynamic_light_array[y][x][0]
-                    x_array = dynamic_light_array[y][x][1]
+                    main_y_arrays = y_array = dynamic_light_array[y][x][0]
+                    main_x_arrays = x_array = dynamic_light_array[y][x][1]
+                    len_of_main_vector = math.sqrt(x_array**2+y_array**2)
                     y_temp = y
                     x_temp = x
                     while x_array != -1 and y_array != -1:
-                        x_array_tmp = y_array_tmp = 1
-                        if x_array < y_array:
-                            if x_array != 0:
-                                x_array_tmp = math.sqrt((x_array - 1) ** 2 + y_array ** 2)
-                                y_array_tmp = math.sqrt(x_array ** 2 + (y_array - 1) ** 2)
-                                # x_array_tmp = x_array * (((config.X_CONST // 2) - 1) // x_array)
-                            else:
-                                x_array_tmp = 0
-                        elif x_array > y_array:
-                            if y_array != 0:
-                                x_array_tmp = math.sqrt((x_array - 1) ** 2 + y_array ** 2)
-                                y_array_tmp = math.sqrt(x_array ** 2 + (y_array - 1) ** 2)
-                                # y_array_tmp = y_array * (((config.Y_CONST // 2) - 1) // y_array)
-                            else:
-                                y_array_tmp = 0
-                        temp_array += [[y_temp, x_temp]]
                         if recompile_map[y_temp][x_temp] != ' ':
-                            if x_array_tmp > y_array_tmp:
+                            temp_array += [[y_temp, x_temp]]
+                            len_of_1_part_of_2_vector = math.sqrt((x_array-1)**2+y_array**2)
+                            len_of_2_part_of_2_vector = math.sqrt((main_x_arrays-x_array)**2+(main_y_arrays-y_array)**2)
+                            len_of_1_part_of_1_vector = math.sqrt(x_array**2+(y_array-1)**2)
+                            len_of_2_part_of_1_vector = math.sqrt((main_x_arrays-x_array)**2+(main_y_arrays-y_array)**2)
+                            if math.fabs(len_of_main_vector-(len_of_1_part_of_1_vector+len_of_2_part_of_1_vector)) \
+                                    < math.fabs(len_of_main_vector-(len_of_1_part_of_2_vector+len_of_2_part_of_2_vector)):
                                 x_array -= 1
                                 if x_temp < (config.X_CONST // 2):
                                     x_temp += 1
                                 elif x_temp > (config.X_CONST // 2):
                                     x_temp -= 1
-                            if x_array_tmp < y_array_tmp:
+                            elif math.fabs(len_of_main_vector-(len_of_1_part_of_1_vector+len_of_2_part_of_1_vector)) \
+                                    > math.fabs(len_of_main_vector-(len_of_1_part_of_2_vector+len_of_2_part_of_2_vector)):
                                 y_array -= 1
                                 if y_temp < (config.Y_CONST // 2):
                                     y_temp += 1
                                 elif y_temp > (config.Y_CONST // 2):
                                     y_temp -= 1
-                            if x_array_tmp == y_array_tmp:
+                            elif math.fabs(len_of_main_vector-(len_of_1_part_of_1_vector+len_of_2_part_of_1_vector)) \
+                                    == math.fabs(len_of_main_vector-(len_of_1_part_of_2_vector+len_of_2_part_of_2_vector)):
                                 x_array -= 1
                                 y_array -= 1
                                 if x_temp < (config.X_CONST // 2):
@@ -323,6 +320,12 @@ class GameCore():
                          recompile_map[y][x + 1] not in config.OTHER_ICONS.values() and
                          recompile_map[y - 1][x] not in config.OTHER_ICONS.values() and
                          recompile_map[y][x - 1] not in config.OTHER_ICONS.values()):
+                    recompile_map[y][x] = ' '
+                if recompile_map[y][x] != ' '  and \
+                        (recompile_map[y + 1][x] == ' ' and
+                         recompile_map[y][x + 1] == ' ' and
+                         recompile_map[y - 1][x] == ' ' and
+                         recompile_map[y][x - 1] == ' '):
                     recompile_map[y][x] = ' '
         if recompile_map[config.Y_CONST - 1][config.X_CONST // 2] in config.WALLS.values():
             recompile_map[config.Y_CONST - 1][config.X_CONST // 2] = ' '
