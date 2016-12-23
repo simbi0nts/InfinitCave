@@ -19,6 +19,7 @@ What I want to do in future releases:
 * Chance to complete the game
 * Cool Story
 * Game Balance
+* Multiplatform compatibility (add Unix platforms)
 
 It's still just a little game, but already have my favourite bugs  
 
